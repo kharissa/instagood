@@ -1,5 +1,20 @@
+@import url('https://fonts.googleapis.com/css?family=Lilita+One');
+
 html, body {
     background-color: white;
+}
+
+.brand {
+    font-family: 'Lilita One', cursive;
+    text-transform: uppercase;
+}
+
+.brand-insta {
+    color: black;
+}
+
+.brand-good {
+    color: #28a745;
 }
 
 a {
