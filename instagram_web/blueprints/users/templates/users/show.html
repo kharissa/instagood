@@ -1,0 +1,24 @@
+{% extends "_layout.html" %}
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-3 text-center pt-2">
+            <img src="https://via.placeholder.com/200" class="mb-5 rounded-circle" />
+            <p><strong>{{user.name}}</strong></p>
+            @{{user.username}}
+            <br /><br />
+            {% if current_user == user %}
+            <a href="{{ url_for('users.edit', user_id=user.id) }}"><button type="button" class="btn btn-outline-dark">Edit Profile</button></a>
+            {% endif %}
+        </div>
+        <div class="col-md-9 p-2">
+            <div class="row">
+                <img class="gallery-item" src="https://via.placeholder.com/200" />
+                <img class="gallery-item" src="https://via.placeholder.com/200" />
+                <img class="gallery-item" src="https://via.placeholder.com/200" />
+                <img class="gallery-item" src="https://via.placeholder.com/200" />
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

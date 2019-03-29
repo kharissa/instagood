@@ -24,7 +24,7 @@ def create():
         if result:
             login_user(user)
             flash(f"Welcome {user.name}. You are now logged in.")
-            return redirect(url_for('home'))
+            return redirect(url_for('users.show', username=user.username))
         else:
             return render_template('sessions/new.html', errors={'Password': 'Email and password do not match.'})
 
@@ -34,8 +34,8 @@ def create():
 def index():
     if 'username' in session:
         flash(f"Logged in as {escape(session['name'])}")
-    
     return redirect(url_for('home'))
+
 
 @sessions_blueprint.route("/logout")
 @login_required

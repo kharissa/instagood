@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, flash, url_for
 from werkzeug.security import generate_password_hash
 from models.user import User
+from flask_login import current_user, login_required
 
 users_blueprint = Blueprint('users',
                             __name__,
@@ -20,18 +21,43 @@ def create():
     else:
         return render_template('users/new.html', errors=u.errors)
 
-@users_blueprint.route('/<username>', methods=["GET"])
+@users_blueprint.route('/profile/<username>', methods=["GET"])
 def show(username):
-    pass
+        user = User.get(User.username == username)
+        return render_template('users/show.html', user=user)
 
 @users_blueprint.route('/', methods=["GET"])
 def index():
     return "USERS"
 
-@users_blueprint.route('/<id>/edit', methods=['GET'])
-def edit(id):
-    pass
+@users_blueprint.route('/<user_id>/edit', methods=['GET'])
+@login_required
+def edit(user_id):
+        user = User.get_by_id(user_id)
+        if current_user == user:
+                return render_template('users/edit.html', user=user)
+        else:
+                return render_template('users/show.html', errors={'Access': 'You do not have access to this page.'})
 
-@users_blueprint.route('/<id>', methods=['POST'])
-def update(id):
-    pass
+@users_blueprint.route('/<user_id>/edit/submit', methods=['POST'])
+@login_required
+def update(user_id):
+        user = User.get_by_id(user_id)
+
+        if current_user == user:
+                if request.form.get('email'):
+                        user.email = request.form.get('email')
+                if request.form.get('name'):
+                        user.name = request.form.get('name')
+                if request.form.get('username'):
+                        user.username = request.form.get('username')
+                if request.form.get('password'):
+                        user.password = generate_password_hash(
+                            request.form.get('password'))
+                if user.save():
+                        flash(f"Account successfully updated.")
+                        return redirect(url_for('users.show', username=user.username))
+                else:
+                        return render_template('users/edit.html', errors=user.errors)
+        else:
+                return render_template('users/show.html', errors={'Access': 'You do not have access to this page.'})

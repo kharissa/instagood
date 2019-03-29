@@ -61,6 +61,10 @@ a:hover {
     border-radius: 20px;
 }
 
+.gallery-item {
+    
+}
+
 @media only screen and (max-width: 650px) {
 
     .sign-up-image {
