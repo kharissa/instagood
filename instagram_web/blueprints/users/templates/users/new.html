@@ -1,35 +1,39 @@
 {% extends "_layout.html" %}
 {% block content %}
-<div class="row justify-content-center text-center pt-4" style="background-color: white;">
-    <div class="col-md-5 p-5 border rounded">
-        <h1>Register</h1>
-        <p>Sign up to see photos from the world's most creative minds.</p>
-        <div class="my-4">
+<div class="row text-center align-items-top" style="background-color: white;" fluid>
+    <div class="col-sm-6 sign-up-image">
+        <img src="{{ url_for('static', filename='images/sign_up_background.jpg') }}" />
+    </div>
+    <div class="col-sm-6 p-5 align-self-center">
+        <img src="{{ url_for('static', filename='images/logo_instagood.png')}}" width="250"/>
+        <p>View photos from the world's most creative minds.</p>
+        <div class="mt-5 px-5">
             <form action="{{ url_for('users.create') }}" method="POST">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
                 <div class="form-group">
-                    <input type="text" class="form-control" id="email" aria-label="Email Address"
+                    <input type="text" class="form-control" id="email" name="email" aria-label="Email Address"
                         placeholder="Email Address">
-                    <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+                    <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone.</small>
                 </div>
                 <div class="form-group">
-                    <input type="text" class="form-control" id="name" aria-label="Full Name"
+                    <input type="text" class="form-control" id="name" name="name" aria-label="Full Name"
                         placeholder="Full Name">
                 </div>
                 <div class="form-group">
-                    <input type="text" class="form-control" id="username" aria-label="Username"
+                    <input type="text" class="form-control" id="username" name="username" aria-label="Username"
                         placeholder="Username">
                 </div>
                 <div class="form-group">
-                    <input type="password" class="form-control" id="password" aria-label="Password"
+                    <input type="password" class="form-control" id="password" name="password" aria-label="Password"
                         placeholder="Password">
                 </div>
                 <div class="form-group">
-                    <button type="button" class="btn btn-primary btn-block">Register</button>
+                    <button type="submit" class="btn btn-success btn-block">Create an Account</button>
                 </div>
             </form>
         </div>
         <hr />
-        <p>Have an account? <a href="/">Log in.</a></p>
+        <p>Have an account? <a href="{{ url_for('sessions.new') }}">Log in.</a></p>
     </div>
 </div>
 {% endblock %}

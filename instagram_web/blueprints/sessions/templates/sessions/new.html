@@ -1,0 +1,27 @@
+{% extends "_layout.html" %}
+{% block content %}
+<div class="row text-center justify-content-center login-bg" fluid>
+    <div class="col-sm-6 p-4 align-self-center login-form">
+        <img src="{{ url_for('static', filename='images/logo_instagood.png')}}" width="250" />
+        <p>Welcome back! Sign in to continue.</p>
+        <div class="mt-4 px-2">
+            <form action="{{ url_for('sessions.create') }}" method="POST">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+                <div class="form-group">
+                    <input type="text" class="form-control" id="email" name="email" aria-label="Email Address"
+                        placeholder="Email Address">
+                </div>
+                <div class="form-group">
+                    <input type="password" class="form-control" id="password" name="password" aria-label="Password"
+                        placeholder="Password">
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-success btn-block">Login</button>
+                </div>
+            </form>
+        </div>
+        <hr />
+        <p>Don't have an account? <a href="{{ url_for('users.new') }}">Sign up.</a></p>
+    </div>
+</div>
+{% endblock %}

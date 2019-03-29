@@ -1,0 +1,15 @@
+{% extends "_layout.html" %}
+{% block content %}
+<div class="row justify-content-end align-items-center text-center" fluid>
+    <div class="col-md-5 error-page-modal p-4">
+        <img src="{{ url_for('static', filename='images/logo_instagood.png')}}" width="250" />
+        <h2>500: Internal Server Error</h2>
+        <p>Something went terribly wrong.</p>
+        <img src="{{ url_for('static', filename='images/device_error.png')}}" width="200" />
+        <p><a href="{{ url_for('home') }}"><strong>GO HOME</strong></a></p>
+    </div>
+    <div class="fixed-bottom error-footer">Graphic by OpenClipart-Vectors on <a
+            href="https://pixabay.com/vectors/device-error-device-defect-154484/">Pixabay</a>
+    </div>
+</div>
+{% endblock %}

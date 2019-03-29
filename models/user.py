@@ -1,8 +1,11 @@
 from models.base_model import BaseModel
 import peewee as pw
+import datetime
+import os
 from peewee_validates import ModelValidator, StringField, validate_email
+from flask_login import UserMixin
 
-class User(BaseModel):
+class User(BaseModel, UserMixin):
     name = pw.CharField()
     email = pw.CharField(unique=True)
     username = pw.CharField(unique=True)
@@ -20,12 +23,10 @@ class User(BaseModel):
         self.errors.update(validator.errors)
         
         if self.errors:
-            print(self.errors)
             return 0
         else:
             self.updated_at = datetime.datetime.now()
             return super(BaseModel, self).save(*args, **kwargs)
-
 
     class CustomValidator(ModelValidator):
         name = StringField(required=True)
