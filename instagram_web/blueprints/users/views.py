@@ -1,3 +1,4 @@
+from app import app
 from flask import Blueprint, render_template, request, redirect, flash, url_for
 from werkzeug.security import generate_password_hash
 from models.user import User
@@ -39,7 +40,7 @@ def edit(user_id):
         else:
                 return render_template('users/show.html', errors={'Access': 'You do not have access to this page.'})
 
-@users_blueprint.route('/<user_id>/edit/submit', methods=['POST'])
+@users_blueprint.route('/<user_id>/edit/profile/submit', methods=['POST'])
 @login_required
 def update(user_id):
         user = User.get_by_id(user_id)
@@ -61,3 +62,5 @@ def update(user_id):
                         return render_template('users/edit.html', errors=user.errors)
         else:
                 return render_template('users/show.html', errors={'Access': 'You do not have access to this page.'})
+
+

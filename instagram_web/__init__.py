@@ -1,6 +1,6 @@
 import os
 from app import app
-from flask import render_template, url_for
+from flask import render_template, url_for, request, redirect
 from instagram_web.blueprints.users.views import users_blueprint
 from instagram_web.blueprints.sessions.views import sessions_blueprint
 from flask_assets import Environment, Bundle
@@ -8,6 +8,9 @@ from .util.assets import bundles
 from flask_wtf.csrf import CSRFProtect
 from flask_login import LoginManager,login_required
 from models.user import User
+from helpers import *
+from werkzeug.utils import secure_filename
+
 
 assets = Environment(app)
 assets.register(bundles)
@@ -54,3 +57,29 @@ def dated_url_for(endpoint, **values):
                                      endpoint, filename)
             values['q'] = int(os.stat(file_path).st_mtime)
     return url_for(endpoint, **values)
+
+
+# def allowed_file(filename):
+#     return '.' in filename and \
+#            filename.rsplit('.', 1)[1].lower() in set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
+
+# app.config.from_object("config")
+
+# @app.route("/", methods=["POST"])
+# def upload_file():
+
+#     if "user_file" not in request.files:
+#         return "No user_file key in request.files"
+
+#     file = request.files["user_file"]
+
+#     if file.filename == "":
+#         return "Please select a file"
+
+#     if file and allowed_file(file.filename):
+#         file.filename = secure_filename(file.filename)
+#         output = upload_file_to_s3(file, app.config["S3_BUCKET"])
+#         return str(output)
+
+#     else:
+#         return redirect("/")
