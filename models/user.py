@@ -1,12 +1,11 @@
-from models.base_model import BaseModel
-import peewee as pw
-from playhouse.hybrid import hybrid_property
-import datetime
 import os
-from peewee_validates import ModelValidator, StringField, validate_email
-from flask_login import UserMixin
+import datetime
 from app import app
-
+import peewee as pw
+from flask_login import UserMixin
+from models.base_model import BaseModel
+from playhouse.hybrid import hybrid_property
+from peewee_validates import ModelValidator, StringField, validate_email
 
 class User(BaseModel, UserMixin):
     name = pw.CharField()
@@ -17,8 +16,7 @@ class User(BaseModel, UserMixin):
 
     @hybrid_property
     def profile_image_url(self):
-        print()
-        return app.config["S3_LOCATION"] + self.profile_image_path
+        return app.config["S3_LOCATION"] + 'users/' + str(self.id) + '/images/' + self.profile_image_path
 
     def save(self, *args, **kwargs):
         # Ensure all fields are entered and email is valid

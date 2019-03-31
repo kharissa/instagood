@@ -13,17 +13,6 @@
             <p><strong>{{user.name}}</strong><br/>
             @{{user.username}}
             </p>
-            <br />
-            {% if current_user == user %}
-            <div class="list-group list-group-flush">
-                <a href="#" class="list-group-item list-group-item-action list-group-item-secondary">
-                    View Profile
-                </a>
-                <a href="{{ url_for('users.edit', user_id=user.id) }}"
-                    class="list-group-item list-group-item-action">Edit Profile</a>
-                <a href="{{ url_for('sessions.logout')}}" class="list-group-item list-group-item-action">Logout</a>
-            </div>
-            {% endif %}
         </div>
         <div class="col-md-8 p-4">
             <div class="row">

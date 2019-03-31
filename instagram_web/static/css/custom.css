@@ -66,10 +66,11 @@ a:hover {
 }
 
 .hero-bg {
-    background-image: url('../images/login_background.jpg');
+    background-image: url('../images/guatape.jpg');
     background-size: cover;
     background-repeat: no-repeat;
     height: 100vh;
+    background-position: center;
 }
 
 .profile-photo {

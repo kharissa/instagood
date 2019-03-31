@@ -70,8 +70,8 @@ def update(user_id):
                         if file and allowed_file(file.filename):
                                 file.filename = secure_filename(file.filename)
                                 user.profile_image_path = file.filename
-                                output = helpers.upload_file_to_s3(
-                                file, app.config["S3_BUCKET"])
+                                helpers.upload_images_to_s3(
+                                file, app.config["S3_BUCKET"], user.id)
                 if user.save():
                         flash(f"Account successfully updated.")
                         return redirect(url_for('users.show', username=user.username))
