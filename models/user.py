@@ -5,6 +5,7 @@ import datetime
 import os
 from peewee_validates import ModelValidator, StringField, validate_email
 from flask_login import UserMixin
+from app import app
 
 
 class User(BaseModel, UserMixin):
@@ -12,11 +13,12 @@ class User(BaseModel, UserMixin):
     email = pw.CharField(unique=True)
     username = pw.CharField(unique=True)
     password = pw.CharField()
-    # profile_image_path = pw.CharField()
+    profile_image_path = pw.CharField(null=True)
 
-    # @hybrid_property
-    # def profile_image_url(self):
-    #     return app.config["S3_LOCATION"] + self.image_path
+    @hybrid_property
+    def profile_image_url(self):
+        print()
+        return app.config["S3_LOCATION"] + self.profile_image_path
 
     def save(self, *args, **kwargs):
         # Ensure all fields are entered and email is valid

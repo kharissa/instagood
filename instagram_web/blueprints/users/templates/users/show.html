@@ -1,17 +1,31 @@
 {% extends "_layout.html" %}
 {% block content %}
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-3 text-center pt-2">
-            <img src="https://via.placeholder.com/200" class="mb-5 rounded-circle" />
-            <p><strong>{{user.name}}</strong></p>
+<div class="container pt-5">
+    <div class="row justify-content-start align-items-start">
+        <div class="col-md-3 text-center mt-5">
+            <div class="profile-photo mb-3">
+                {% if user.profile_image_path %}
+                <img src="{{ user.profile_image_url }}" />
+                {% else %}
+                <img src="https://dummyimage.com/200x200/a6a6a6/fff.png&text=Placeholder" />
+                {% endif %}
+            </div>
+            <p><strong>{{user.name}}</strong><br/>
             @{{user.username}}
-            <br /><br />
+            </p>
+            <br />
             {% if current_user == user %}
-            <a href="{{ url_for('users.edit', user_id=user.id) }}"><button type="button" class="btn btn-outline-dark">Edit Profile</button></a>
+            <div class="list-group list-group-flush">
+                <a href="#" class="list-group-item list-group-item-action list-group-item-secondary">
+                    View Profile
+                </a>
+                <a href="{{ url_for('users.edit', user_id=user.id) }}"
+                    class="list-group-item list-group-item-action">Edit Profile</a>
+                <a href="{{ url_for('sessions.logout')}}" class="list-group-item list-group-item-action">Logout</a>
+            </div>
             {% endif %}
         </div>
-        <div class="col-md-9 p-2">
+        <div class="col-md-8 p-4">
             <div class="row">
                 <img class="gallery-item" src="https://via.placeholder.com/200" />
                 <img class="gallery-item" src="https://via.placeholder.com/200" />

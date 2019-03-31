@@ -8,7 +8,7 @@ from .util.assets import bundles
 from flask_wtf.csrf import CSRFProtect
 from flask_login import LoginManager,login_required
 from models.user import User
-from helpers import *
+import helpers
 from werkzeug.utils import secure_filename
 
 
@@ -58,28 +58,3 @@ def dated_url_for(endpoint, **values):
             values['q'] = int(os.stat(file_path).st_mtime)
     return url_for(endpoint, **values)
 
-
-# def allowed_file(filename):
-#     return '.' in filename and \
-#            filename.rsplit('.', 1)[1].lower() in set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
-
-# app.config.from_object("config")
-
-# @app.route("/", methods=["POST"])
-# def upload_file():
-
-#     if "user_file" not in request.files:
-#         return "No user_file key in request.files"
-
-#     file = request.files["user_file"]
-
-#     if file.filename == "":
-#         return "Please select a file"
-
-#     if file and allowed_file(file.filename):
-#         file.filename = secure_filename(file.filename)
-#         output = upload_file_to_s3(file, app.config["S3_BUCKET"])
-#         return str(output)
-
-#     else:
-#         return redirect("/")

@@ -3,6 +3,8 @@ from flask import Blueprint, render_template, request, redirect, flash, url_for
 from werkzeug.security import generate_password_hash
 from models.user import User
 from flask_login import current_user, login_required
+from werkzeug.utils import secure_filename
+import helpers
 
 users_blueprint = Blueprint('users',
                             __name__,
@@ -40,6 +42,13 @@ def edit(user_id):
         else:
                 return render_template('users/show.html', errors={'Access': 'You do not have access to this page.'})
 
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in set(
+               ['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
+
+
 @users_blueprint.route('/<user_id>/edit/profile/submit', methods=['POST'])
 @login_required
 def update(user_id):
@@ -55,6 +64,14 @@ def update(user_id):
                 if request.form.get('password'):
                         user.password = generate_password_hash(
                             request.form.get('password'))
+                if request.files["user-photo"]:
+                        file = request.files["user-photo"]
+
+                        if file and allowed_file(file.filename):
+                                file.filename = secure_filename(file.filename)
+                                user.profile_image_path = file.filename
+                                output = helpers.upload_file_to_s3(
+                                file, app.config["S3_BUCKET"])
                 if user.save():
                         flash(f"Account successfully updated.")
                         return redirect(url_for('users.show', username=user.username))
