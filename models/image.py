@@ -14,4 +14,4 @@ class Image(BaseModel):
 
     @hybrid_property
     def url(self):
-        return f'{app.config["S3_LOCATION"]}users/{self.id}/images/{self.image_path}'
+        return f'{app.config["S3_LOCATION"]}users/{self.user_id}/images/{self.image_path}'

@@ -63,6 +63,12 @@ a:hover {
 
 .gallery-item {
     margin: 10px;
+    width: 300px;
+}
+
+.gallery-item img {
+    width: 100%;
+    object-fit: cover;
 }
 
 .hero-bg {

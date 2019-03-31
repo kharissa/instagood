@@ -12,7 +12,7 @@
     {% endassets %}
 
     {% block header %}{% endblock %}
-    <title>{% block title %}{% endblock %}Instagood</title>
+    <title>{% block title %}{% endblock %}</title>
   </head>
   <body>
     {% if current_user.is_authenticated %}
@@ -83,14 +83,18 @@
             </button>
           </div>
           <div class="modal-body">
-            <form id="photo-form" action="{{ url_for('users.update', user_id=current_user.id) }}" method="POST"
+            <form id="photo-form" action="{{ url_for('images.create', user_id=current_user.id) }}" method="POST"
               enctype="multipart/form-data">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
               <div class="form-group">
                 <div class="custom-file">
-                  <input name="user-photo" type="file" class="form-control custom-file-input"
-                    id="user-photo">
-                  <label class="custom-file-label" for="user-photo">Choose file</label>
+                  <input name="photo-post" type="file" class="form-control custom-file-input"
+                    id="photo-post">
+                  <label class="custom-file-label" for="photo-post">Choose file</label>
                 </div>
+              </div>
+              <div class="form-group">
+                <textarea class="form-control" id="caption" name="caption" placeholder="Write your caption here." rows="2"></textarea>
               </div>
             </form>
           </div>

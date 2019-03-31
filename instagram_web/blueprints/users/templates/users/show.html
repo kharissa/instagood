@@ -15,11 +15,12 @@
             </p>
         </div>
         <div class="col-md-8 p-4">
-            <div class="row">
-                <img class="gallery-item" src="https://via.placeholder.com/200" />
-                <img class="gallery-item" src="https://via.placeholder.com/200" />
-                <img class="gallery-item" src="https://via.placeholder.com/200" />
-                <img class="gallery-item" src="https://via.placeholder.com/200" />
+            <div class="row justify-content-around">
+                {% for photo in photos %}
+                <div class="gallery-item">
+                    <img src="{{ photo.url }}" />
+                </div>
+                {% endfor %}
             </div>
         </div>
     </div>
