@@ -1,0 +1,23 @@
+{% extends "_layout.html" %}
+{% block content %}
+<div class="container pt-5">
+    <div class="row justify-content-center align-content-center">
+        <div class="col-md-7 pt-4">
+            <div class="card text-center">
+                <div class="card-header">
+                    <strong>Transaction ID</strong>: {{ transaction.id }}
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">{{ result.header }}</h5>
+                    <img src="{{ result.icon }}" />
+                    <p class="card-text">{{ result.message }}</p>
+                    <a href="{{ url_for('home')}}" class="btn btn-secondary">Go Home</a>
+                </div>
+                <div class="card-footer text-muted">
+                    Thank you for supporting our creators.
+                </div>
+            </div>            
+        </div>
+    </div>
+</div>
+{% endblock %}

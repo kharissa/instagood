@@ -6,6 +6,8 @@ from models.image import Image
 from flask_login import current_user, login_required
 from werkzeug.utils import secure_filename
 import helpers
+import braintree
+from helpers import generate_client_token, transact, find_transaction
 
 images_blueprint = Blueprint('images',
                             __name__,
@@ -38,21 +40,20 @@ def create():
 
 @images_blueprint.route('/<image_id>', methods=["GET"])
 def show(image_id):
-        image = Image.get_by_id(image_id)
-        return render_template('images/show.html', image=image)
+        pass
 
 @images_blueprint.route('/', methods=["GET"])
 def index():
-    return "USERS"
+        return "USERS"
 
 @images_blueprint.route('/<user_id>/edit', methods=['GET'])
 @login_required
 def edit(user_id):
-    pass
+        pass
 
 
 def allowed_file(filename):
-    return '.' in filename and \
+        return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in set(
                ['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
 
@@ -60,4 +61,4 @@ def allowed_file(filename):
 @images_blueprint.route('/<user_id>/edit/profile/submit', methods=['POST'])
 @login_required
 def update(user_id):
-    pass
+        pass

@@ -21,7 +21,7 @@
                     <img src="{{ photo.url }}" />
                     <p class="caption">{{ photo.caption }}</p>
                     <div class="middle"> 
-                        <a href="{{ url_for('images.show', image_id=photo.id) }}"><button type="button" class=" btn btn-success donate-button">Donate</button></a>
+                        <a href="{{ url_for('transactions.new', image_id=photo.id) }}"><button type="button" class=" btn btn-success donate-button">Donate</button></a>
                     </div>
                 </li>
                 {% endfor %}
