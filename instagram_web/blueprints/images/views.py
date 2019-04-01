@@ -36,9 +36,10 @@ def create():
                 return render_template('users/show.html', errors={'Access': 'You do not have access to this page.'})
 
 
-@images_blueprint.route('/profile/<username>', methods=["GET"])
-def show(username):
-    pass
+@images_blueprint.route('/<image_id>', methods=["GET"])
+def show(image_id):
+        image = Image.get_by_id(image_id)
+        return render_template('images/show.html', image=image)
 
 @images_blueprint.route('/', methods=["GET"])
 def index():

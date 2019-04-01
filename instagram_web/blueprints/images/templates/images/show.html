@@ -1,0 +1,30 @@
+{% extends "_layout.html" %}
+{% block content %}
+<div class="container pt-5">
+    <div class="row">
+        <div class="col-md-4 p-3">
+            <h2>Donate</h2>
+            <p>Say thanks to this photographer by making a donation. Your contribution supports creators for their work.</p>
+        </div>
+        <div class="col-md-8 p-3">
+            <img class="donate-photo" src="{{ image.url }}"/>
+        </div>
+    </div>
+</div>
+<div id="dropin-container"></div>
+<button id="submit-button">Request payment method</button>
+<script>
+    var button = document.querySelector('#submit-button');
+
+    braintree.dropin.create({
+        authorization: 'CLIENT_TOKEN_FROM_SERVER',
+        container: '#dropin-container'
+    }, function (createErr, instance) {
+        button.addEventListener('click', function () {
+            instance.requestPaymentMethod(function (err, payload) {
+                // Submit payload.nonce to your server
+            });
+        });
+    });
+</script>
+{% endblock %}

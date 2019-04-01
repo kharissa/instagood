@@ -1,8 +1,8 @@
 {% extends "_layout.html" %}
 {% block content %}
-<div class="container pt-5">
+<div class="container-fluid pt-5">
     <div class="row justify-content-start align-items-start">
-        <div class="col-md-3 text-center mt-5">
+        <div class="col-md-3 text-center m-5">
             <div class="profile-photo mb-3">
                 {% if user.profile_image_path %}
                 <img src="{{ user.profile_image_url }}" />
@@ -14,13 +14,31 @@
             @{{user.username}}
             </p>
         </div>
-        <div class="col-md-8 p-4">
-            <div class="row justify-content-around">
+        <div class="col-md-8 px-5 pt-3 user-photos">
+            <ul id="grid">
                 {% for photo in photos %}
-                <div class="gallery-item">
+                <li class="gallery-item" currentSlide="{{ loop.index }}">
                     <img src="{{ photo.url }}" />
-                </div>
+                    <p class="caption">{{ photo.caption }}</p>
+                    <div class="middle"> 
+                        <a href="{{ url_for('images.show', image_id=photo.id) }}"><button type="button" class=" btn btn-success donate-button">Donate</button></a>
+                    </div>
+                </li>
                 {% endfor %}
+            </ul>
+        </div>
+        <div class="lightbox hidden">
+            <div class="lightbox-content">
+                <div class="lightbox-controls">
+                    <a href="#" class="lightbox-close"><button type="button"
+                            class="btn btn-secondary">Close</button></a>
+                    <a href="#" class="lightbox-prev">&#10094;</a>
+                    <a href="#" class="lightbox-next">&#10095;</a>
+                </div>
+                <div class="lightbox-image">
+                    <img src="" />
+                    <p class="caption"></p>
+                </div>
             </div>
         </div>
     </div>

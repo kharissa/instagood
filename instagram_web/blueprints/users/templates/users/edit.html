@@ -1,8 +1,8 @@
 {% extends "_layout.html" %}
 {% block content %}
-<div class="container pt-5">
+<div class="container-fluid pt-5">
     <div class="row justify-content-start align-items-start">
-        <div class="col-md-3 text-center mt-5">
+        <div class="col-md-3 text-center m-5">
             <div class="profile-photo mb-3">
                 {% if user.profile_image_path %}
                 <img src="{{ user.profile_image_url }}" />
@@ -14,8 +14,8 @@
                 @{{user.username}}
             </p>
         </div>
-        <div class="col-md-8 p-4 m-2">
-            <h2 class="text-center">Edit Profile</h2>
+        <div class="col-md-8 px-5 pt-3">
+            <h2 class="text-center mb-4">Edit Profile</h2>
             <form action="{{ url_for('users.update', user_id=current_user.id) }}" method="POST" enctype="multipart/form-data">
                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
                 <div class="form-group">
