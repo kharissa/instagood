@@ -39,8 +39,10 @@ def new(image_id):
     return render_template('transactions/new.html', image=image, client_token=client_token)
 
 
-@transactions_blueprint.route('/<transaction_id>', methods=['GET'])
-def show_checkout(transaction_id):
+@transactions_blueprint.route('/<image_id>/<transaction_id>', methods=['GET'])
+def show_checkout(transaction_id, image_id):
+    image = Image.get_by_id(image_id)
+    user = image.user
     transaction = find_transaction(transaction_id)
     result = {}
     if transaction.status in TRANSACTION_SUCCESS_STATUSES:
@@ -49,8 +51,12 @@ def show_checkout(transaction_id):
             'icon': url_for('static', filename="images/ok_icon.png"),
             'message': 'Your test transaction has been successfully processed. You will receive a payment receipt via email shortly.'
         }
-        print(transaction)
-        
+        t = Transaction(amount=transaction.amount * 100,
+                        braintree_id=transaction.id, user=user, image=image)
+        if t.save():
+            flash(f"Transaction successfully created.")
+        else:
+            return render_template('transactions/show.html', transaction=transaction, result=result, errors=t.errors)
 
     else:
         result = {
@@ -72,7 +78,4 @@ def create_checkout(image_id):
         }
     })
 
-    if result.is_success or result.transaction:
-        return redirect(url_for('transactions.show_checkout', transaction_id=result.transaction.id))
-    else:
-        return redirect(url_for('transactions.show_checkout', transaction_id=result.transaction.id), errors={'Error': result.errors.deep_errors})
+    return redirect(url_for('transactions.show_checkout', transaction_id=result.transaction.id, image_id=image_id))

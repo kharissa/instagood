@@ -12,4 +12,4 @@ class Transaction(BaseModel):
     user = pw.ForeignKeyField(User, backref='users')
     image = pw.ForeignKeyField(Image, backref='images')
     amount = pw.IntegerField()
-    currency = pw.CharField()
+    braintree_id = pw.CharField()
