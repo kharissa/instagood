@@ -1,9 +1,12 @@
 import os
-import braintree
-from dotenv import load_dotenv
 import app
+import braintree
 import boto3, botocore
 from config import Config
+from dotenv import load_dotenv
+import sendgrid
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import Mail, Email, Personalization, Content
 
 s3 = boto3.client(
    "s3",
@@ -47,3 +50,59 @@ def transact(options):
 
 def find_transaction(transaction_id):
     return gateway.transaction.find(transaction_id)
+
+def send_transaction_email(recipient, amount, card_type, last_four_digits, photographer, transaction_id):
+    html_content = f"""
+    <html>
+  <body>
+    <table align="center" border="0" cellpadding="0" cellspacing="0" width="90%" style="border: 1px solid #cccccc; margin-bottom: 20px; font-family: Arial, sans-serif; font-size: 16px; line-height: 1.6em; color: #153643;">
+      <tr>
+        <td align="center" bgcolor="#F8F8F8" style="padding: 40px 0 30px 0;">
+          <img src="https://s3.amazonaws.com/instagood-images/static/logo_instagood.png" alt="Instagood logo" width="350" style="display: block;">
+        </td>
+      </tr>
+      <tr>
+        <td bgcolor="#ffffff" style="padding: 40px 30px 40px 30px;">
+          <table border="0" cellpadding="0" cellspacing="0" width="100%">
+            <tr>
+              <td>
+              <h3>Thank you, {recipient.name}!</h3>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding: 20px 0 30px 0;">
+                Your donation of {amount} USD has been sent to {photographer.name}. Thank you for supporting creators and their work.
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <b>Payment Details</b>
+                <ul>
+                  <li>Transaction Id: {transaction_id}</li>
+                  <li>Payment Method: {card_type}-{last_four_digits}</li>
+                  <li>Total Amount: {amount} USD</li>
+                </ul>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+      <tr>
+        <td bgcolor="#28a745" style="padding: 30px 30px 30px 30px; color: #ffffff; font-size: 13px;">
+          &reg; Instagood, 2019<br/>
+          Building a community to support art.
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>"""
+    sg = sendgrid.SendGridAPIClient(apikey=os.environ.get('SENDGRID_API_KEY'))
+    from_email = Email("transactions@instagood.com")
+    to_email = Email(recipient.email)
+    subject = "Your Instagood Donation Receipt"
+    content = Content("text/html", html_content)
+    mail = Mail(from_email, subject, to_email, content)
+    response = sg.client.mail.send.post(request_body=mail.get())
+    print(response.status_code)
+    print(response.body)
+    print(response.headers)

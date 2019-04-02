@@ -3,10 +3,11 @@ import os
 from os.path import join, dirname
 from models.image import Image
 from models.transaction import Transaction
+from models.user import User
 from dotenv import load_dotenv
 from flask_login import current_user, login_required
 import braintree
-from helpers import generate_client_token, transact, find_transaction
+from helpers import generate_client_token, transact, find_transaction, send_transaction_email
 from app import app
 
 transactions_blueprint = Blueprint('transactions',
@@ -40,10 +41,12 @@ def new(image_id):
 
 
 @transactions_blueprint.route('/<image_id>/<transaction_id>', methods=['GET'])
+@login_required
 def show_checkout(transaction_id, image_id):
     image = Image.get_by_id(image_id)
-    user = image.user
     transaction = find_transaction(transaction_id)
+    user = User.get_by_id(current_user.id)
+    photographer = image.user
     result = {}
     if transaction.status in TRANSACTION_SUCCESS_STATUSES:
         result = {
@@ -51,10 +54,13 @@ def show_checkout(transaction_id, image_id):
             'icon': url_for('static', filename="images/ok_icon.png"),
             'message': 'Your test transaction has been successfully processed. You will receive a payment receipt via email shortly.'
         }
-        t = Transaction(amount=transaction.amount * 100,
+        t = Transaction(amount=transaction.amount,
                         braintree_id=transaction.id, user=user, image=image)
+        
         if t.save():
             flash(f"Transaction successfully created.")
+            send_transaction_email(
+                user, transaction.amount, transaction.credit_card_details.card_type, transaction.credit_card_details.last_4, photographer, transaction.id)
         else:
             return render_template('transactions/show.html', transaction=transaction, result=result, errors=t.errors)
 
@@ -78,4 +84,7 @@ def create_checkout(image_id):
         }
     })
 
-    return redirect(url_for('transactions.show_checkout', transaction_id=result.transaction.id, image_id=image_id))
+    if result.is_success or result.transaction:
+         return redirect(url_for('transactions.show_checkout', transaction_id=result.transaction.id, image_id=image_id))
+    else:
+        return redirect(url_for('transactions.show_checkout', transaction_id=result.transaction.id, image_id=image_id))

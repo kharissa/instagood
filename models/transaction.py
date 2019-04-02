@@ -11,5 +11,5 @@ from playhouse.hybrid import hybrid_property
 class Transaction(BaseModel):
     user = pw.ForeignKeyField(User, backref='users')
     image = pw.ForeignKeyField(Image, backref='images')
-    amount = pw.IntegerField()
+    amount = pw.DecimalField(decimal_places=2)
     braintree_id = pw.CharField()
