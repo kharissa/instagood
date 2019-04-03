@@ -13,8 +13,28 @@
             <p><strong>{{user.name}}</strong><br/>
             @{{user.username}}
             </p>
+            <div class="row" style="font-size: .9em">
+                <div class="col">
+                    <strong>{{ photos.count() }}</strong> posts
+                </div>
+                <div class="col">
+                    <strong>0</strong> followers
+                </div>
+                <div class="col">
+                    <strong>0</strong> following
+                </div>
+            </div>
+            {% if user != current_user and user.is_public == True %}
+            <div class="m-2 p-2">
+                <button class="btn btn-success">Follow</button>
+            </div>
+            {% elif user != current_user and user.is_public == False %}
+            <div class="m-2 p-2">
+                <button class="btn btn-success">Request</button>
+            </div>
+            {% endif %}
         </div>
-        <div class="col-md-8 px-5 pt-3 user-photos">
+        <div class="col-md-7 px-1 pt-3 user-photos">
             <ul id="grid">
                 {% for photo in photos %}
                 <li class="gallery-item" currentSlide="{{ loop.index }}">

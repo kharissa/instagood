@@ -46,6 +46,30 @@
                         <label class="custom-file-label" for="user-photo">Choose file</label>
                     </div>
                 </div>
+                <hr />
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-md-3">
+                            Public Profile
+                            <div class="mt-2">
+                                <label class="switch" for="public-profile">
+                                    {% if current_user.is_public %}
+                                        <input type="checkbox" class="form-control" id="public-profile"
+                                        name="public-profile" checked>
+                                    {% else %}
+                                        <input type="checkbox" class="form-control" id="public-profile"
+                                            name="public-profile">
+                                    {% endif %}
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="mt-2 col-md-9 text-center align-self-center"
+                            style="font-size: .9em;">
+                            <em>Turning off public profile means users must send follow requests for your images to be seen by them.</em>
+                        </div>
+                    </div>
+                </div>
                 <div class="form-group">
                     <button type="submit" class="btn btn-success btn-block">Update Account</button>
                 </div>

@@ -1,27 +1,38 @@
 import os
+import rq
+import config
+import helpers
 from app import app
+from redis import Redis
+from models.user import User
+from .util.assets import bundles
+from instagram_web.helpers.google_oauth import oauth
+from flask_wtf.csrf import CSRFProtect
+from werkzeug.utils import secure_filename
+from flask_assets import Environment, Bundle
+from flask_login import LoginManager,login_required
 from flask import render_template, url_for, request, redirect
 from instagram_web.blueprints.users.views import users_blueprint
 from instagram_web.blueprints.sessions.views import sessions_blueprint
 from instagram_web.blueprints.images.views import images_blueprint
 from instagram_web.blueprints.transactions.views import transactions_blueprint
-from flask_assets import Environment, Bundle
-from .util.assets import bundles
-from flask_wtf.csrf import CSRFProtect
-from flask_login import LoginManager,login_required
-from models.user import User
-import helpers
-from werkzeug.utils import secure_filename
-
 
 assets = Environment(app)
 assets.register(bundles)
 csrf = CSRFProtect(app)
+oauth.init_app(app)
+
+# token = oauth.google.authorize_access_token()
+# email = oauth.google.get(
+#     'https://www.googleapis.com/oauth2/v2/userinfo').json()['email']
 
 app.register_blueprint(users_blueprint, url_prefix="/users")
 app.register_blueprint(sessions_blueprint, url_prefix="/sessions")
 app.register_blueprint(images_blueprint, url_prefix="/images")
 app.register_blueprint(transactions_blueprint, url_prefix="/transactions")
+
+app.redis = Redis.from_url(app.config['REDIS_URL'])
+app.task_queue = rq.Queue('microblog-tasks', connection=app.redis)
 
 @app.errorhandler(500)
 def internal_server_error(e):
@@ -47,6 +58,7 @@ def load_user(user_id):
 @login_required
 def home():
     return render_template('home.html')
+
 
 # Wrap CSS files with unique ID to prevent browser caching errors
 @app.context_processor

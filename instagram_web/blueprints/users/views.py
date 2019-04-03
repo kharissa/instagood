@@ -66,7 +66,7 @@ def update(user_id):
                 if request.form.get('password'):
                         user.password = generate_password_hash(
                             request.form.get('password'))
-                if request.files["user-photo"]:
+                if 'file' in request.files:
                         file = request.files["user-photo"]
 
                         if file and allowed_file(file.filename):
@@ -74,6 +74,10 @@ def update(user_id):
                                 user.profile_image_path = file.filename
                                 helpers.upload_images_to_s3(
                                 file, app.config["S3_BUCKET"], user.id)
+                if request.form.get('public-profile') and user.is_public == False:
+                                user.is_public = True
+                if not request.form.get('public-profile') and user.is_public == True:
+                        user.is_public = False
                 if user.save():
                         flash(f"Account successfully updated.")
                         return redirect(url_for('users.show', username=user.username))

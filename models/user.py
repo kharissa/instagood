@@ -13,6 +13,7 @@ class User(BaseModel, UserMixin):
     username = pw.CharField(unique=True)
     password = pw.CharField()
     profile_image_path = pw.CharField(null=True)
+    is_public = pw.BooleanField(default=True)
 
     @hybrid_property
     def profile_image_url(self):
@@ -49,4 +50,3 @@ class User(BaseModel, UserMixin):
             'password.required': 'Create a password.',
             'email.validators': 'Enter a correct email address.'
         }
-

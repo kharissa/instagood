@@ -4,11 +4,13 @@ from os.path import join, dirname
 from models.image import Image
 from models.transaction import Transaction
 from models.user import User
+from models.task import Task
 from dotenv import load_dotenv
 from flask_login import current_user, login_required
 import braintree
 from helpers import generate_client_token, transact, find_transaction, send_transaction_email
 from app import app
+from models.base_model import db
 
 transactions_blueprint = Blueprint('transactions',
                              __name__,
@@ -59,8 +61,11 @@ def show_checkout(transaction_id, image_id):
         
         if t.save():
             flash(f"Transaction successfully created.")
-            send_transaction_email(
-                user, transaction.amount, transaction.credit_card_details.card_type, transaction.credit_card_details.last_4, photographer, transaction.id)
+            rq_job = app.task_queue.enqueue(
+                'tasks.' + 'send_transaction_email', user, transaction.amount, transaction.credit_card_details.card_type, transaction.credit_card_details.last_4, photographer, transaction.id)
+            task = Task(redis_job_id=rq_job.get_id(), name='send_transaction_email',
+                    description='Send user a donation receipt.', transaction=t)
+            task.save()
         else:
             return render_template('transactions/show.html', transaction=transaction, result=result, errors=t.errors)
 

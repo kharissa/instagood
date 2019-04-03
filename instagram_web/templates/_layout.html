@@ -33,7 +33,7 @@
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true"
               aria-expanded="false">
               {% if current_user.profile_image_path %}
-                <img src="{{ current_user.profile_image_url }}" width="35" style="border-radius: 50%; border: 1px solid green" />
+                <img src="{{ current_user.profile_image_url }}" width="35" height="35" style="object-fit: cover; border-radius: 50%; border: 1px solid green" />
               {% else %}
                 {{current_user.name}}
               {% endif %}
