@@ -66,7 +66,6 @@ def create():
             return redirect(url_for('users.show', username=user.username))
         else:
             return render_template('sessions/new.html', errors={'Password': 'Email and password do not match.'})
-
     return render_template('sessions/new.html', errors={'Email': 'We were not able to find a user with that email.'})
 
 @sessions_blueprint.route('/', methods=["GET"])

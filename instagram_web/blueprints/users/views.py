@@ -66,7 +66,7 @@ def update(user_id):
                                 helpers.upload_images_to_s3(
                                 file, app.config["S3_BUCKET"], user.id)
                 if request.form.get('public-profile') and user.is_public == False:
-                                user.is_public = True
+                        user.is_public = True
                 if not request.form.get('public-profile') and user.is_public == True:
                         user.is_public = False
                 if user.save():
