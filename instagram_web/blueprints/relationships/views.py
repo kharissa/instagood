@@ -45,8 +45,11 @@ def destroy(following_id):
     following = User.get_by_id(following_id)
     relationship = Relationship.get(
         Relationship.follower_id == current_user.id, Relationship.following_id == following_id)
+
     t = Task.get(Task.relationship_id == relationship.id)
-    t.delete_instance()
+    if t:
+        t.delete_instance()
+
     relationship.delete_instance()
     flash(f"You have unfollowed {following.name}.")
 
@@ -80,8 +83,11 @@ def approve(user_id):
 def reject(user_id):
     follower = User.get_by_id(user_id)
     r = Relationship.get(Relationship.follower_id == user_id, Relationship.following_id == current_user.id)
+
     t = Task.get(Task.relationship_id == r.id)
-    t.delete_instance()
+    if t:
+        t.delete_instance()
+        
     r.delete_instance()
     flash(f"You have rejected {follower.name}'s follow request.")
     return redirect(url_for('users.show', username=current_user.username))
