@@ -43,14 +43,17 @@ def new(following_id):
 @login_required
 def destroy(following_id):
     following = User.get_by_id(following_id)
-    relationship = Relationship.get(
+    r = Relationship.get(
         Relationship.follower_id == current_user.id, Relationship.following_id == following_id)
 
-    if relationship.id in Task.select():
-        t = Task.get(Task.relationship_id == relationship.id)
-        t.delete_instance()
+    try:
+        if Task.get(Task.relationship_id == r.id):
+            t = Task.get(Task.relationship_id == r.id)
+            t.delete_instance()
+    except:
+        pass
 
-    relationship.delete_instance()
+    r.delete_instance()
     flash(f"You have unfollowed {following.name}.")
 
     return render_template('users/show.html', user=following, photos=Image.select().where(Image.user_id == following.id))
@@ -59,9 +62,7 @@ def destroy(following_id):
 @relationships_blueprint.route('/')
 @login_required
 def index():
-    requests = [follower for follower in current_user.followers if not current_user.is_approved(follower.id)]
-
-    return render_template('relationships/index.html', requests=requests)
+    return render_template('relationships/index.html', requests=current_user.unapproved_followers)
 
 
 @relationships_blueprint.route('<user_id>/approve/')
@@ -84,9 +85,12 @@ def reject(user_id):
     follower = User.get_by_id(user_id)
     r = Relationship.get(Relationship.follower_id == user_id, Relationship.following_id == current_user.id)
 
-    if r.id in Task.select():
-        t = Task.get(Task.relationship_id == r.id)
-        t.delete_instance()
+    try:
+        if Task.get(Task.relationship_id == r.id):
+            t = Task.get(Task.relationship_id == r.id)
+            t.delete_instance()
+    except:
+        pass
 
     r.delete_instance()
     flash(f"You have rejected {follower.name}'s follow request.")

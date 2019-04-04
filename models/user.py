@@ -23,6 +23,12 @@ class User(BaseModel, UserMixin):
         return User.select().join(Relationship, on=(Relationship.follower_id == User.id)).where(Relationship.following_id == self.id, Relationship.is_approved == True)
 
     @hybrid_property
+    def unapproved_followers(self):
+        from models.relationship import Relationship
+        # Return list of current_user's unapproved followers
+        return User.select().join(Relationship, on=(Relationship.follower_id == User.id)).where(Relationship.following_id == self.id, Relationship.is_approved == False)
+
+    @hybrid_property
     def following(self):
         from models.relationship import Relationship
         # Return list of users that current_user is following (approved)
