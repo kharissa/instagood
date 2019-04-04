@@ -4,11 +4,7 @@
     <div class="row justify-content-start align-items-start">
         <div class="col-md-3 text-center m-5">
             <div class="profile-photo mb-3">
-                {% if user.profile_image_path %}
                 <img src="{{ user.profile_image_url }}" />
-                {% else %}
-                <img src="https://dummyimage.com/200x200/a6a6a6/fff.png&text=Placeholder" />
-                {% endif %}
             </div>
             <p><strong>{{user.name}}</strong><br />
                 @{{user.username}}

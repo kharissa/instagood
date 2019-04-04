@@ -4,37 +4,46 @@
     <div class="row justify-content-start align-items-start">
         <div class="col-md-3 text-center m-5">
             <div class="profile-photo mb-3">
-                {% if user.profile_image_path %}
                 <img src="{{ user.profile_image_url }}" />
-                {% else %}
-                <img src="https://dummyimage.com/200x200/a6a6a6/fff.png&text=Placeholder" />
-                {% endif %}
             </div>
             <p><strong>{{user.name}}</strong><br/>
             @{{user.username}}
             </p>
-            <div class="row" style="font-size: .9em">
+            <div class="row" style="font-size: .8em">
                 <div class="col">
-                    <strong>{{ photos.count() }}</strong> posts
+                    <strong class="text-success">{{ photos.count() }}</strong> posts
                 </div>
                 <div class="col">
-                    <strong>0</strong> followers
+                    <strong class="text-success">{{ user.followers.count() }}</strong> followers
                 </div>
                 <div class="col">
-                    <strong>0</strong> following
+                    <strong class="text-success">{{ user.following.count() }}</strong> following
                 </div>
             </div>
-            {% if user != current_user and user.is_public == True %}
+            {% if current_user in user.followers and user.is_approved(current_user.id) %}
             <div class="m-2 p-2">
-                <button class="btn btn-success">Follow</button>
+                <a href="{{ url_for('users.unfollow', follower_id=current_user.id, following_id=user.id) }}"><button
+                        class="btn btn-outline-success">Unfollow</button></a>
+            </div>
+            {% elif current_user in user.followers %}
+            <div class="m-2 p-2">
+                <button
+                    class="btn btn-success" disabled>Requested</button>
+            </div>
+            {% elif user != current_user and user.is_public == True %}
+            <div class="m-2 p-2">
+                <a href="{{ url_for('users.follow', follower_id=current_user.id, following_id=user.id) }}"><button
+                        class="btn btn-success">Follow</button></a>
             </div>
             {% elif user != current_user and user.is_public == False %}
             <div class="m-2 p-2">
-                <button class="btn btn-success">Request</button>
+                <a href="{{ url_for('users.follow', follower_id=current_user.id, following_id=user.id) }}"><button
+                        class="btn btn-success">Request</button></a>
             </div>
             {% endif %}
         </div>
         <div class="col-md-7 px-1 pt-3 user-photos">
+            {% if (current_user == user) or (user.is_public) or (current_user in user.followers and user.is_approved(current_user.id)) %}
             <ul id="grid">
                 {% for photo in photos %}
                 <li class="gallery-item" currentSlide="{{ loop.index }}">
@@ -46,6 +55,13 @@
                 </li>
                 {% endfor %}
             </ul>
+            {% else %}
+            <div class="text-center align-self-center">
+                <img
+                    src="{{ url_for('static', filename='images/icons8-invisible-90.png') }}" width="70" />
+                <p><h4>This profile is private.</h4></p>
+            </div>
+            {% endif %}
         </div>
         <div class="lightbox hidden">
             <div class="lightbox-content">

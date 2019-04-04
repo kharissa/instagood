@@ -1,0 +1,42 @@
+{% extends "_layout.html" %}
+{% block content %}
+<div class="container-fluid pt-5">
+    <div class="row justify-content-center align-items-center">
+        <div class="col-md-9 mt-4">
+            <h2 class="text-center mb-4">Follow Requests</h2>
+            <table class="table table-hover">
+                {% if requests %}
+                <thead>
+                    <tr>
+                        <th scope="col"></th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Handle</th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="request-table">
+                    {% for request in requests  %}
+                    <tr>
+                        <td>
+                            <div class="follow-request">
+                                <img src="{{ request.profile_image_url }}" />
+                            </div>
+                        </td>
+                        <td>{{ request.name }}</td>
+                        <td><a href="{{ url_for('users.show', username=request.username) }}">@{{ request.username }}</a></td>
+                        <td>
+                            <a href="{{ url_for('users.approve', user_id=request.id) }}"><button type="button" class="btn btn-success btn-sm">Confirm</button></a>
+                            <a href="{{ url_for('users.reject', user_id=request.id) }}"><button type="button" class="btn btn-warning btn-sm">Delete
+                                    Request</button></a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+                {% else %}
+                    <p class="text-center">There are no current follow requests.</p>
+                {% endif %}
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

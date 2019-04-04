@@ -3,6 +3,7 @@ from app import app
 import peewee as pw
 from models.base_model import BaseModel
 from models.transaction import Transaction
+from models.relationship import Relationship
 import redis
 import rq
 from database import db
@@ -12,7 +13,10 @@ class Task(BaseModel):
     name = pw.CharField()
     description = pw.CharField()
     redis_job_id = pw.CharField()
-    transaction = pw.ForeignKeyField(Transaction, backref='transactions')
+    transaction = pw.ForeignKeyField(
+        Transaction, backref='transactions', null=True)
+    relationship = pw.ForeignKeyField(
+        Relationship, backref='relationships', null=True)
     complete = pw.BooleanField(default=False)
 
     def get_rq_job(self):

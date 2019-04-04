@@ -5,12 +5,13 @@ import helpers
 from app import app
 from redis import Redis
 from models.user import User
+from models.image import Image
 from .util.assets import bundles
 from instagram_web.helpers.google_oauth import oauth
 from flask_wtf.csrf import CSRFProtect
 from werkzeug.utils import secure_filename
 from flask_assets import Environment, Bundle
-from flask_login import LoginManager,login_required
+from flask_login import LoginManager, login_required, current_user
 from flask import render_template, url_for, request, redirect
 from instagram_web.blueprints.users.views import users_blueprint
 from instagram_web.blueprints.sessions.views import sessions_blueprint
@@ -57,7 +58,16 @@ def load_user(user_id):
 @app.route("/")
 @login_required
 def home():
-    return render_template('home.html')
+        import datetime
+        photos = []
+        for user in current_user.following:
+                gallery = Image.select().where(Image.user_id == user.id)
+                photos.extend(gallery)   
+
+        users = User.select().where(User.id != current_user.id)
+        users = [user for user in users if user not in current_user.following]
+
+        return render_template('home.html', photos=photos, users=users)
 
 
 # Wrap CSS files with unique ID to prevent browser caching errors

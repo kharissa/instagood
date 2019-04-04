@@ -6,6 +6,7 @@ from flask_login import UserMixin
 from models.base_model import BaseModel
 from playhouse.hybrid import hybrid_property
 from peewee_validates import ModelValidator, StringField, validate_email
+from flask import url_for
 
 class User(BaseModel, UserMixin):
     name = pw.CharField()
@@ -16,8 +17,35 @@ class User(BaseModel, UserMixin):
     is_public = pw.BooleanField(default=True)
 
     @hybrid_property
+    def followers(self):
+        from models.relationship import Relationship
+
+        return User.select().join(Relationship, on=(Relationship.follower_id == User.id)).where(Relationship.following_id == self.id, Relationship.is_approved == True)
+
+    @hybrid_property
+    def following(self):
+        from models.relationship import Relationship
+
+        return User.select().join(Relationship, on=(Relationship.following_id == User.id)).where(Relationship.follower_id == self.id, Relationship.is_approved == True)
+
+    def is_approved(self, user_id):
+        from models.relationship import Relationship
+
+        return Relationship.select(Relationship.is_approved).join(User, on=(User.id == Relationship.following_id)).where(Relationship.follower_id == user_id, Relationship.following_id == self.id).first().is_approved
+
+    @hybrid_property
+    def has_requests(self):
+        from models.relationship import Relationship
+
+        return Relationship.select().join(User, on=(User.id == Relationship.following_id)).where(Relationship.is_approved == False, Relationship.following_id == self.id)
+
+    @hybrid_property
     def profile_image_url(self):
-        return app.config["S3_LOCATION"] + 'users/' + str(self.id) + '/images/' + self.profile_image_path
+        if self.profile_image_path:
+            return app.config["S3_LOCATION"] + 'users/' + str(self.id) + '/images/' + self.profile_image_path
+        else:
+            return (url_for('static', filename='images/avatar.png'))
+
 
     def save(self, *args, **kwargs):
         # Ensure all fields are entered and email is valid

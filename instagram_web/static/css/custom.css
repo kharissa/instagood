@@ -2,6 +2,9 @@
 
 html, body {
     background-color: white;
+    font-family: Helvetica, sans-serif;
+    font-size: 1em;
+    background-color: #fafafa;
 }
 
 .brand {
@@ -179,15 +182,6 @@ a:hover {
         backface-visibility: hidden;
 }
 
-
-.hero-bg {
-    background-image: url('../images/guatape.jpg');
-    background-size: cover;
-    background-repeat: no-repeat;
-    height: 100vh;
-    background-position: center;
-}
-
 .profile-photo {
     width: 200px;
     height: 200px;
@@ -264,6 +258,22 @@ input:checked+.slider:before {
 
 .slider.round:before {
     border-radius: 50%;
+}
+
+#request-table tr td {
+    vertical-align: middle;
+}
+
+.follow-request {
+    width: 65px;
+    height: 65px;
+}
+
+.follow-request img {
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
 }
 
 @media only screen and (max-width: 650px) {
