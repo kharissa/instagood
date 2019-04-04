@@ -60,7 +60,11 @@ def home():
         for user in current_user.following:
                 gallery = Image.select().where(Image.user_id == user.id)
                 photos.extend(gallery)   
-       
+
+        # Add user's image's as well
+        current_user_photos = Image.select().where(Image.user_id == current_user.id)
+        photos.extend(current_user_photos)
+
         # Suggested users to follow
         users = User.select().where(User.id != current_user.id)
         users = [user for user in users if user not in current_user.following]
