@@ -7,9 +7,7 @@
 {% block content %}
 <div class="container-fluid">
   <div class="row hero-bg justify-content-around mt-5 pt-2">
-
     <div class="col-md-4">
-
       <div class="row-fluid">
         {% if current_user.following %}
         <div class="p-4 m-4 bg-white" style="border: 1px solid #e6e6e6;">
@@ -36,7 +34,6 @@
     </div>
 
     <div class="row-fluid">
-      {% if current_user.following %}
       <div class="p-4 m-4 bg-white" style="border: 1px solid #e6e6e6;">
         <div class="mb-3">
           <span style="font-size: .9em; font-weight: 600; color: #999;">Suggested Users</span>
@@ -57,7 +54,6 @@
           </ul>
         </div>
       </div>
-      {% endif %}
     </div>
     </div>
     <div class="col-md-8">
@@ -79,6 +75,7 @@
             </div>
           </div>
         </div>
+        <div class="gallery-item">
         <img class="card-img" src="{{photo.url}}" alt="{{photo.caption}}">
         {% if photo.caption %}
         <div class="card-body">
@@ -88,6 +85,7 @@
           </p>
         </div>
         {% endif %}
+        </div>
         <div class="card-footer text-muted text-center" style="font-size:.8em;">
           Posted on {{ photo.created_at.strftime("%b %d %Y")}}
         </div>
@@ -101,4 +99,16 @@
     {% endif %}
   </div>
 </div>
+<div class="lightbox hidden">
+  <div class="lightbox-content">
+    <div class="lightbox-controls">
+      <a href="#" class="lightbox-close"><button type="button" class="btn btn-secondary">Close</button></a>
+    </div>
+    <div class="lightbox-image">
+      <img src="" />
+      <p class="caption"></p>
+    </div>
+  </div>
+</div>
+<script type="text/javascript" src="{{ url_for('static', filename='js/lightbox.js') }}"></script>
 {% endblock %}

@@ -1,16 +1,16 @@
 {% extends "_layout.html" %}
 {% block content %}
-<div class="container-fluid pt-5">
-    <div class="row justify-content-start align-items-start">
-        <div class="col-md-3 text-center m-5">
-            <div class="profile-photo mb-3">
-                <img src="{{ user.profile_image_url }}" />
-            </div>
-            <p><strong>{{user.name}}</strong><br />
-                @{{user.username}}
+<div class="container-fluid p-5 mt-5 px-0">
+    <div class="row justify-content-around align-items-start">
+        <div class="col-md-3 m-2 text-center bg-white p-4"
+            style="border-radius: 15px; border: 1px solid rgba(0,0,0,.0975); min-width: 240px;">
+             <div class="profile-photo mb-3" style="background-image: url('{{user.profile_image_url}}');">
+             </div>
+            <p><strong>{{current_user.name}}</strong><br />
+                @{{current_user.username}}
             </p>
         </div>
-        <div class="col-md-8 px-5 pt-3">
+        <div class="col-md-8 px-5 pt-3 bg-white" style="border-radius: 15px; border: 1px solid rgba(0,0,0,.0975);">
             <h2 class="text-center mb-4">Edit Profile</h2>
             <form action="{{ url_for('users.update', user_id=current_user.id) }}" method="POST" enctype="multipart/form-data">
                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />

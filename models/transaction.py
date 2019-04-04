@@ -1,7 +1,7 @@
 import peewee as pw
 from models.user import User
-from models.base_model import BaseModel
 from models.image import Image
+from models.base_model import BaseModel
 
 class Transaction(BaseModel):
     user = pw.ForeignKeyField(User, backref='users')

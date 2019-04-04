@@ -1,21 +1,12 @@
+import helpers
 from app import app
-from flask import Blueprint, render_template, request, redirect, flash, url_for
-from werkzeug.security import generate_password_hash
 from models.user import User
 from models.image import Image
-from flask_login import current_user, login_required
 from werkzeug.utils import secure_filename
-import helpers
-import braintree
-from helpers import generate_client_token, transact, find_transaction
+from flask_login import current_user, login_required
+from flask import Blueprint, render_template, request, redirect, flash, url_for
 
-images_blueprint = Blueprint('images',
-                            __name__,
-                            template_folder='templates')
-
-@images_blueprint.route('/new', methods=['GET'])
-def new():
-        pass
+images_blueprint = Blueprint('images', __name__, template_folder='templates')
 
 @images_blueprint.route('/', methods=['POST'])
 @login_required
@@ -37,28 +28,7 @@ def create():
         else:
                 return render_template('users/show.html', errors={'Access': 'You do not have access to this page.'})
 
-
-@images_blueprint.route('/<image_id>', methods=["GET"])
-def show(image_id):
-        pass
-
-@images_blueprint.route('/', methods=["GET"])
-def index():
-        return "USERS"
-
-@images_blueprint.route('/<user_id>/edit', methods=['GET'])
-@login_required
-def edit(user_id):
-        pass
-
-
 def allowed_file(filename):
         return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in set(
                ['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
-
-
-@images_blueprint.route('/<user_id>/edit/profile/submit', methods=['POST'])
-@login_required
-def update(user_id):
-        pass

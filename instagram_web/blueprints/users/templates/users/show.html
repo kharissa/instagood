@@ -1,48 +1,57 @@
 {% extends "_layout.html" %}
 {% block content %}
-<div class="container-fluid pt-5">
-    <div class="row justify-content-start align-items-start">
-        <div class="col-md-3 text-center m-5">
-            <div class="profile-photo mb-3">
-                <img src="{{ user.profile_image_url }}" />
+<div class="container-fluid p-5 mt-5 px-0">
+    <div class="row justify-content-around align-items-start">
+        <div class="col-md-3 m-2 text-center bg-white p-4" 
+            style="border-radius: 15px; border: 1px solid rgba(0,0,0,.0975); min-width: 240px;">
+            <div class="profile-photo mb-3" 
+                style="background-image: url('{{user.profile_image_url}}');" >
             </div>
-            <p><strong>{{user.name}}</strong><br/>
-            @{{user.username}}
-            </p>
-            <div class="row" style="font-size: .8em">
-                <div class="col">
-                    <strong class="text-success">{{ photos.count() }}</strong> posts
+            <div>
+                <strong>{{user.name}}</strong>
+                <br/>
+                @{{user.username}}
+            </div>
+            <div class="row text-center justify-content-center mt-3 px-0" style="font-size: .8em">
+                <div class="col-auto">
+                    <strong class="text-success">{{ photos.count() }}</strong> Posts
                 </div>
-                <div class="col">
-                    <strong class="text-success">{{ user.followers.count() }}</strong> followers
+                <div class="col-auto">
+                    <strong class="text-success">{{ user.followers.count() }}</strong> Followers
                 </div>
-                <div class="col">
-                    <strong class="text-success">{{ user.following.count() }}</strong> following
+                <div class="col-auto">
+                    <strong class="text-success">{{ user.following.count() }}</strong> Following
                 </div>
             </div>
+            
             {% if current_user in user.followers and user.is_approved(current_user.id) %}
             <div class="m-2 p-2">
-                <a href="{{ url_for('users.unfollow', follower_id=current_user.id, following_id=user.id) }}"><button
+                <a href="{{ url_for('relationships.destroy', following_id=user.id) }}"><button
                         class="btn btn-outline-success">Unfollow</button></a>
             </div>
-            {% elif current_user in user.followers %}
+
+            {% elif user.id in user.has_requests and user.is_approved(current_user.id) == False %}
             <div class="m-2 p-2">
                 <button
                     class="btn btn-success" disabled>Requested</button>
             </div>
+
             {% elif user != current_user and user.is_public == True %}
             <div class="m-2 p-2">
-                <a href="{{ url_for('users.follow', follower_id=current_user.id, following_id=user.id) }}"><button
+                <a href="{{ url_for('relationships.new', following_id=user.id) }}"><button
                         class="btn btn-success">Follow</button></a>
             </div>
+
             {% elif user != current_user and user.is_public == False %}
             <div class="m-2 p-2">
-                <a href="{{ url_for('users.follow', follower_id=current_user.id, following_id=user.id) }}"><button
+                <a href="{{ url_for('relationships.new', following_id=user.id) }}"><button
                         class="btn btn-success">Request</button></a>
             </div>
             {% endif %}
+
         </div>
-        <div class="col-md-7 px-1 pt-3 user-photos">
+        <div class="user-photos col-md-8 px-5 pt-3">
+
             {% if (current_user == user) or (user.is_public) or (current_user in user.followers and user.is_approved(current_user.id)) %}
             <ul id="grid">
                 {% for photo in photos %}
@@ -55,6 +64,7 @@
                 </li>
                 {% endfor %}
             </ul>
+
             {% else %}
             <div class="text-center align-self-center">
                 <img
@@ -62,6 +72,7 @@
                 <p><h4>This profile is private.</h4></p>
             </div>
             {% endif %}
+
         </div>
         <div class="lightbox hidden">
             <div class="lightbox-content">
@@ -79,4 +90,21 @@
         </div>
     </div>
 </div>
+<script type="text/javascript" src="{{ url_for('static', filename='js/lightbox.js') }}"></script>
+<script src="{{ url_for('static', filename='js/vendor/imagesloaded.pkgd.min.js') }}">
+</script>
+<script src="{{ url_for('static', filename='js/vendor/masonry.pkgd.min.js') }}">
+</script>
+<script>
+    // Initialize Masonry library
+    let grid = document.querySelector('.user-photos');
+    let masonry = new Masonry(grid, {
+        itemSelector: 'li',
+    });
+
+    imagesLoaded(grid).on('progress', function () {
+        // layout Masonry after each image loads
+        masonry.layout();
+    });
+ </script>
 {% endblock %}

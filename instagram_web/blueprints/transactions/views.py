@@ -1,20 +1,16 @@
-from flask import Blueprint, Flask, redirect, url_for, render_template, request, flash
 import os
-from os.path import join, dirname
-from models.image import Image
-from models.transaction import Transaction
+import braintree
+from app import app
 from models.user import User
 from models.task import Task
-from dotenv import load_dotenv
-from flask_login import current_user, login_required
-import braintree
-from helpers import generate_client_token, transact, find_transaction, send_transaction_email
-from app import app
+from models.image import Image
 from models.base_model import db
+from models.transaction import Transaction
+from flask_login import current_user, login_required
+from flask import Blueprint, Flask, redirect, url_for, render_template, request, flash
+from helpers import generate_client_token, transact, find_transaction
 
-transactions_blueprint = Blueprint('transactions',
-                             __name__,
-                             template_folder='templates')
+transactions_blueprint = Blueprint('transactions', __name__, template_folder='templates')
 
 TRANSACTION_SUCCESS_STATUSES = [
     braintree.Transaction.Status.Authorized,
@@ -26,12 +22,10 @@ TRANSACTION_SUCCESS_STATUSES = [
     braintree.Transaction.Status.SubmittedForSettlement
 ]
 
-
 @transactions_blueprint.route('/', methods=['GET'])
+@login_required
 def index():
     return redirect(url_for('new_checkout'))
-
-
 
 @transactions_blueprint.route('/<image_id>/new', methods=['GET'])
 @login_required
@@ -40,7 +34,6 @@ def new(image_id):
     client_token = generate_client_token()
 
     return render_template('transactions/new.html', image=image, client_token=client_token)
-
 
 @transactions_blueprint.route('/<image_id>/<transaction_id>', methods=['GET'])
 @login_required
@@ -80,6 +73,7 @@ def show_checkout(transaction_id, image_id):
 
 
 @transactions_blueprint.route('/checkouts/<image_id>', methods=['POST'])
+@login_required
 def create_checkout(image_id):
     result = transact({
         'amount': request.form['amount'],

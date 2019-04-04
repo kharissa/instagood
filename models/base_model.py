@@ -1,6 +1,5 @@
-import os
-import peewee as pw
 import datetime
+import peewee as pw
 from database import db
 from peewee_validates import ModelValidator
 

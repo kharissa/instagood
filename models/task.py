@@ -1,12 +1,11 @@
 import os
+import rq
+import redis
 from app import app
 import peewee as pw
 from models.base_model import BaseModel
 from models.transaction import Transaction
 from models.relationship import Relationship
-import redis
-import rq
-from database import db
 
 
 class Task(BaseModel):

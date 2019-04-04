@@ -1,6 +1,6 @@
 import peewee as pw
-from models.base_model import BaseModel
 from models.user import User
+from models.base_model import BaseModel
 
 
 class Relationship(BaseModel):
