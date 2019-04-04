@@ -25,9 +25,9 @@ Jinja2==2.10
 jmespath==0.9.4
 jsmin==2.2.2
 MarkupSafe==1.1.0
-peewee==3.1.0
-peewee-db-evolve==3.7.0
 peewee-validates==1.0.7
+peewee==3.9.3
+peewee-db-evolve==3.7.0
 psycopg2-binary==2.7.7
 pycodestyle==2.5.0
 pycparser==2.19
