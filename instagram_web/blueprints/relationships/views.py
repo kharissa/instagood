@@ -46,8 +46,8 @@ def destroy(following_id):
     relationship = Relationship.get(
         Relationship.follower_id == current_user.id, Relationship.following_id == following_id)
 
-    t = Task.get(Task.relationship_id == relationship.id)
-    if t:
+    if relationship.id in Task.select():
+        t = Task.get(Task.relationship_id == relationship.id)
         t.delete_instance()
 
     relationship.delete_instance()
@@ -87,7 +87,7 @@ def reject(user_id):
     t = Task.get(Task.relationship_id == r.id)
     if t:
         t.delete_instance()
-        
+
     r.delete_instance()
     flash(f"You have rejected {follower.name}'s follow request.")
     return redirect(url_for('users.show', username=current_user.username))
