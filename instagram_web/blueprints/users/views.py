@@ -57,7 +57,7 @@ def update(user_id):
                 if request.form.get('password'):
                         user.password = generate_password_hash(
                             request.form.get('password'))
-                if 'file' in request.files:
+                if request.files:
                         file = request.files["user-photo"]
 
                         if file and allowed_file(file.filename):
