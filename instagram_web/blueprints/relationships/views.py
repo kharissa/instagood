@@ -84,8 +84,8 @@ def reject(user_id):
     follower = User.get_by_id(user_id)
     r = Relationship.get(Relationship.follower_id == user_id, Relationship.following_id == current_user.id)
 
-    t = Task.get(Task.relationship_id == r.id)
-    if t:
+    if r.id in Task.select():
+        t = Task.get(Task.relationship_id == r.id)
         t.delete_instance()
 
     r.delete_instance()
