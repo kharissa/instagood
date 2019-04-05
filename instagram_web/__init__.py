@@ -27,7 +27,7 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = "sessions.new"
 app.redis = Redis.from_url(app.config['REDIS_URL'])
-app.task_queue = rq.Queue('microblog-tasks', connection=app.redis)
+app.task_queue = rq.Queue(connection=app.redis)
 
 app.register_blueprint(users_blueprint, url_prefix="/users")
 app.register_blueprint(sessions_blueprint, url_prefix="/sessions")

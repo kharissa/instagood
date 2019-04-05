@@ -1,1 +1,2 @@
-web: python migrate.py; gunicorn start:app --preload; 
+web: python migrate.py; gunicorn start:app --preload;
+worker: rq worker
