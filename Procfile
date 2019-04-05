@@ -1,2 +1,2 @@
 web: python migrate.py; gunicorn start:app --preload;
-worker: rq worker
+worker: rq worker --url $REDIS_URL
