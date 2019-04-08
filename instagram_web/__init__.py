@@ -18,6 +18,9 @@ from instagram_web.blueprints.sessions.views import sessions_blueprint
 from instagram_web.blueprints.images.views import images_blueprint
 from instagram_web.blueprints.relationships.views import relationships_blueprint
 from instagram_web.blueprints.transactions.views import transactions_blueprint
+from instagram_api.blueprints.users.views import users_api_blueprint
+from instagram_api.blueprints.sessions.views import sessions_api_blueprint
+from instagram_api.blueprints.images.views import images_api_blueprint
 
 assets = Environment(app)
 assets.register(bundles)
@@ -34,7 +37,9 @@ app.register_blueprint(sessions_blueprint, url_prefix="/sessions")
 app.register_blueprint(images_blueprint, url_prefix="/images")
 app.register_blueprint(transactions_blueprint, url_prefix="/transactions")
 app.register_blueprint(relationships_blueprint, url_prefix="/requests")
-
+csrf.exempt(users_api_blueprint)
+csrf.exempt(sessions_api_blueprint)
+csrf.exempt(images_api_blueprint)
 
 @app.errorhandler(500)
 def internal_server_error(e):
@@ -68,6 +73,10 @@ def home():
         # Suggested users to follow
         users = User.select().where(User.id != current_user.id)
         users = [user for user in users if user not in current_user.following]
+
+        # If long users list, slice 5
+        if len(users) > 5:
+                users = users[0:5]
 
         return render_template('home.html', photos=photos, users=users)
 

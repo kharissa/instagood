@@ -53,7 +53,6 @@ class User(BaseModel, UserMixin):
             # Return url to placeholder avatar if no image
             return (url_for('static', filename='images/avatar.png'))
 
-
     def save(self, *args, **kwargs):
         # Ensure all fields are entered and email is valid
         validator = type(self).CustomValidator(self)
