@@ -21,13 +21,13 @@ def new():
 def authorize():
     oauth.google.authorize_access_token()
     google_user = oauth.google.get('https://www.googleapis.com/oauth2/v2/userinfo').json()
-
-    if google_user['email'] in User.select(User.email):
+    print(google_user)
+    try:
         user = User.get(User.email == google_user['email'])
         login_user(user)
         flash(f"Welcome {user.name}. You are now logged in.")
         return redirect(url_for('users.show', username=user.username))
-    else:
+    except:
         random_pw = os.urandom(8)
 
         if google_user.get('name'): 
@@ -46,7 +46,7 @@ def authorize():
             login_user(u)
             return redirect(url_for('users.show', username=u.username))
         else:
-            return render_template('users/new.html', errors=u.errors)
+            return render_template('users/show.html', errors=u.errors)
 
 @sessions_blueprint.route('/google')
 def google():
