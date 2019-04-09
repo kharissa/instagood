@@ -21,7 +21,6 @@ def new():
 def authorize():
     oauth.google.authorize_access_token()
     google_user = oauth.google.get('https://www.googleapis.com/oauth2/v2/userinfo').json()
-    print(google_user)
     try:
         user = User.get(User.email == google_user['email'])
         login_user(user)

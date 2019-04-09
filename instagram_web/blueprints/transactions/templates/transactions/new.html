@@ -1,6 +1,7 @@
 {% extends "_layout.html" %}
 {% block content %}
 <div class="container pt-5 mt-3">
+    <div id="loader"></div>
     <div class="row">
         <div class="col-md-4 p-3">
             <h2>Donate</h2>
@@ -31,15 +32,16 @@
     </div>
 </div>
 <script>
-    const button = document.querySelector('#submit-button');
+    const loader = document.querySelector('#loader');
     const form = document.querySelector("#payment-form");
-    
+
     braintree.dropin.create({
       authorization: '{{client_token}}',
       container: '#dropin-container'
     }, function (createErr, instance) {
       form.addEventListener('submit', function (event) {
         event.preventDefault();
+        loader.style.display = 'block';
         instance.requestPaymentMethod(function (err, payload) {
             if (err) {
                 console.log('Error', err);
