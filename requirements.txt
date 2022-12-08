@@ -5,7 +5,7 @@ Babel==2.4.0
 boto3==1.9.124
 botocore==1.12.124
 braintree==3.52.0
-certifi==2019.3.9
+certifi==2022.12.7
 cffi==1.12.2
 chardet==3.0.4
 Click==7.0
